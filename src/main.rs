@@ -1,14 +1,17 @@
 mod file_database;
+mod time_tracker_store;
 
+use crate::file_database::FileDatabase;
+use crate::time_tracker_store::TimeTrackerStore;
 use std::io::{self};
 use std::time::{UNIX_EPOCH, SystemTime};
 
 fn main() {
-    let mut f = file_database::get_handler("default");
+    let mut file_database = FileDatabase::prepare("default");
     loop {
         let s = get_topic_name_input();
         let now_utc = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-        file_database::write_new_topic(&mut f, &*s, now_utc);
+        file_database.add_topic( &*s, now_utc);
     }
 }
 
